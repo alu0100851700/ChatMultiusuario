@@ -27,15 +27,8 @@ private slots:
 
     void on_inputTextEdit_returnPressed();
 
-    void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
-
-    void processReadyReadStandardOutput();
-
-    void processError(QProcess::ProcessError error);
-
     void on_setupButton_clicked();
 
-    void on_Escribiralservidor_clicked();
 public slots:
     void leer_socketservidor();
 
