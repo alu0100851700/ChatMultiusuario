@@ -15,14 +15,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    client.cpp \
-    clientthread.cpp \
     aboutdialog.cpp \
     settingsdialog.cpp
 
 HEADERS  += mainwindow.h \
-    client.h \
-    clientthread.h \
     aboutdialog.h \
     settingsdialog.h
 
