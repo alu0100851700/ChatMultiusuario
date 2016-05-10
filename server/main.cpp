@@ -1,7 +1,11 @@
 #include <QCoreApplication>
 #include <QApplication>
+#include <unistd.h>        // para getopt(), optarg, optind, ...
+#include <iostream>
 #include <QSettings>
-#include <unistd.h>
+
+#include "server.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -20,7 +24,7 @@ int main(int argc, char *argv[])
                 settings.setValue("port", atoi(optarg));
                 break;
             case 'h':
-                //Desarrollar
+                std::cout << "Ayuda en desarrollo" << std::endl;
                 break;
             default:
                     std::fprintf(stderr,
@@ -28,6 +32,9 @@ int main(int argc, char *argv[])
                                  args);
         }
     }
+
+
+    Server servidor;
 
 
     return a.exec();

@@ -1,17 +1,31 @@
 #ifndef CLIENT_H
 #define CLIENT_H
-
+#include <iostream>
 #include <QObject>
+#include <QSslSocket>
+#include <QList>
+
 
 class Client : public QObject
 {
     Q_OBJECT
+
 public:
-    explicit Client(QObject *parent = 0);
 
-signals:
+    static QList<Client*> list;
 
-public slots:
+    Client(QTcpSocket* tcpSocket, QObject *parent);
+
+
+private slots:
+
+    void readData();
+
+
+private:
+
+    QTcpSocket *tcpSocket_;
+
 };
 
 #endif // CLIENT_H
