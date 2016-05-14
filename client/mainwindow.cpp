@@ -11,17 +11,30 @@ MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
     isConnected_(false),
     process_(this),
-    tcpSocket_(new QTcpSocket(this)),
+    sslSocket_(new QSslSocket(this)),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
 
-    //Conectamos la señal de "leer" con el slot
+    if (sslSocket_->supportsSsl())
+      {
+        ui->connectButton->setEnabled(true);
+        sslSocket_->setProtocol(QSsl::TlsV1_0);
+        ui->outputTextEdit->appendPlainText("SslSupport");
+      }
+    else{
+        QString noSslMsg = QString("%1\n%2")
+                .arg("*** Your version of Qt does support SSL ***")
+                .arg("If you believe that your "
+                     "version of Qt has SSL support enabled, you may "
+                     "need to install the OpenSSL run-time libraries.");
+        ui->outputTextEdit->appendPlainText(noSslMsg);
+        ui->connectButton->setEnabled(false);
+    }
 
-    connect(tcpSocket_,SIGNAL (readyRead()),this,
-            SLOT(leer_socketservidor()));
-
+    connect(sslSocket_,SIGNAL(disconnected()),this,SLOT(handleDisconnect()));
+    connect(sslSocket_,SIGNAL (readyRead()),this, SLOT(leer_socketservidor()));
 }
 
 MainWindow::~MainWindow()
@@ -38,18 +51,27 @@ void MainWindow::on_connectButton_clicked()
 {
     if(isConnected_){
 
-        tcpSocket_->disconnectFromHost();
+        sslSocket_->disconnectFromHost();
         ui->connectButton->setText("Connect");
         isConnected_=false;
 
     }
     else{
         QSettings settings;
-        QString serverAddress = settings.value("serverAddress","127.0.0.1").toString();
+        QString serverAddress = settings.value("serverAddress",
+                                               "127.0.0.1").toString();
         int port = settings.value("port",6000).toInt();
         QString username = settings.value("username").toString();
 
-        tcpSocket_->connectToHost(serverAddress,port);
+        connect(sslSocket_, SIGNAL(error(QAbstractSocket::SocketError)),
+                        this, SLOT(socketError(QAbstractSocket::SocketError)));
+        connect(sslSocket_, SIGNAL(sslErrors(QList<QSslError>)),
+                this, SLOT(sslErrors(QList<QSslError>)));
+
+        QList<QSslError> errorsThatCanBeIgnored;
+        //errorsThatCanBeIgnored
+
+        sslSocket_->connectToHostEncrypted(serverAddress,port);
 
         ui->connectButton->setText("Disconnect");
         isConnected_=true;
@@ -64,10 +86,13 @@ void MainWindow::on_aboutButton_clicked()
 
 void MainWindow::on_inputTextEdit_returnPressed()
 {
-    QString line= ui->inputTextEdit->text() +'\n';
+    QString line= ui->inputTextEdit->text();
+    ui->outputTextEdit->appendPlainText(line);
+    line += '\n';
 
-    tcpSocket_->write(line.toLocal8Bit());
+    sslSocket_->write(line.toLocal8Bit().constData());
     ui->inputTextEdit->clear();
+
 
 }
 
@@ -77,12 +102,28 @@ void MainWindow::on_setupButton_clicked()
     dialog.exec();
 }
 
+void MainWindow::handleDisconnect()
+{
+    ui->connectButton->setText("Connect");
+    isConnected_=false;
+}
+
 
 void MainWindow ::leer_socketservidor()
 {
-     while(tcpSocket_->canReadLine()){
-         QByteArray dataIn=tcpSocket_->readLine();
+     while(sslSocket_->canReadLine()){
+         QByteArray dataIn=sslSocket_->readLine();
          ui->outputTextEdit->appendPlainText(QString (dataIn));
      }
 
+}
+
+void MainWindow::socketError(QAbstractSocket::SocketError)
+{
+    QMessageBox::critical(this, tr("Connection error"), sslSocket_->errorString());
+}
+
+void MainWindow::sslErrors(const QList<QSslError> &errors)
+{
+    sslSocket_->ignoreSslErrors();
 }

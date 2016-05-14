@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QProcess>
 #include <QTcpSocket>
-
+#include <QSslSocket>
 
 namespace Ui {
 class MainWindow;
@@ -29,14 +29,21 @@ private slots:
 
     void on_setupButton_clicked();
 
+    void handleDisconnect();
+
+    void socketError(QAbstractSocket::SocketError);
+
+    void sslErrors(const QList<QSslError> &errors);
+
 public slots:
     void leer_socketservidor();
+
 
 private:
     Ui::MainWindow *ui;
     bool isConnected_;
     QProcess process_;
-    QTcpSocket* tcpSocket_;
+    QSslSocket* sslSocket_;
 };
 
 #endif // MAINWINDOW_H
