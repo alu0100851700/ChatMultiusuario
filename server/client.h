@@ -6,6 +6,7 @@
 #include <QList>
 #include <QSsl>
 #include <QDateTime>
+#include <QSettings>
 
 
 class Client : public QObject
@@ -29,6 +30,7 @@ private slots:
 private:
 
     QSslSocket *sslSocket_;
+    QSettings settings;
 
 };
 

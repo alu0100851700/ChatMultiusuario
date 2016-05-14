@@ -7,6 +7,8 @@ Client::Client(QSslSocket *sslSocket, QObject *parent)
     : QObject(parent), sslSocket_(sslSocket)
 {
 
+    QString key = settings.value("sslkey").toString();
+    QString crt = settings.value("sslcrt").toString();
 
     if(sslSocket_->supportsSsl()){
         connect(sslSocket_, SIGNAL(encrypted()), this, SLOT(handshakeComplete()));
@@ -17,8 +19,8 @@ Client::Client(QSslSocket *sslSocket, QObject *parent)
 
         sslSocket_->setProtocol(QSsl::TlsV1_0);
 
-        sslSocket_->setPrivateKey("/home/david/Documentos/Sistemas_Operativos_Avanzados/ChatMultiusuario/server/certificate/server.key", QSsl::Rsa);
-        sslSocket_->setLocalCertificate("/home/david/Documentos/Sistemas_Operativos_Avanzados/ChatMultiusuario/server/certificate/server.crt");
+        sslSocket_->setPrivateKey(key.toUtf8().constData(), QSsl::Rsa);
+        sslSocket_->setLocalCertificate(crt.toUtf8().constData());
         sslSocket_->startServerEncryption();
 
 
