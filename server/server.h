@@ -6,6 +6,7 @@
 #include <QTcpServer>
 #include <QSettings>
 
+
 #include "client.h"
 
 class Server: public QTcpServer
@@ -20,11 +21,7 @@ public:
 private:
 
     QSettings settings;
-
-
-private slots:
-
-    void sessionOpened();
+    void incomingConnection(qintptr socketDescriptor);
 
 };
 #endif // SERVER_H
