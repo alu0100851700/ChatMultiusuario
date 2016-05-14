@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QSslSocket>
 #include <QList>
+#include <QSsl>
+#include <QDateTime>
 
 
 class Client : public QObject
@@ -14,17 +16,19 @@ public:
 
     static QList<Client*> list;
 
-    Client(QTcpSocket* tcpSocket, QObject *parent);
+    Client(QSslSocket* sslSocket, QObject *parent);
 
 
 private slots:
 
     void readData();
-
+    void disconnection();
+    void socketError(QAbstractSocket::SocketError);
+    void handshakeComplete();
 
 private:
 
-    QTcpSocket *tcpSocket_;
+    QSslSocket *sslSocket_;
 
 };
 
