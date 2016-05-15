@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
 {
     //QList<Client*> clients;
     QApplication a(argc, argv);
+    a.setStyle("fusion");
     QApplication::setOrganizationName("Universidad de La Laguna");
     QApplication::setOrganizationDomain("ull.es");
     QApplication::setApplicationName("Talk GUI");

@@ -5,6 +5,11 @@
 #include <QProcess>
 #include <QTcpSocket>
 #include <QSslSocket>
+#include <QCamera>
+#include <QMenu>
+#include <QAction>
+
+#include "talkmessage.pb.h"
 
 namespace Ui {
 class MainWindow;
@@ -35,15 +40,20 @@ private slots:
 
     void sslErrors(const QList<QSslError> &errors);
 
+
 public slots:
     void leer_socketservidor();
+    void webcamOptions();
+    void cargarImagenOptions();
 
 
 private:
     Ui::MainWindow *ui;
     bool isConnected_;
-    QProcess process_;
     QSslSocket* sslSocket_;
+    QMenu *mAvatarMenu;
+    QAction *mWebcamAction;
+    QAction *mCargarAction;
 };
 
 #endif // MAINWINDOW_H

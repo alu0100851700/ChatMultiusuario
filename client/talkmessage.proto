@@ -1,0 +1,15 @@
+// Protocolo de comunicaciones talk
+message Message {
+    required string userName = 1;       // Nombre de Usuario
+    required uint64 timestamp = 2;      // Segundos desde 1/1/1970
+    required MessageType type = 3;      // Tipo de mensaje
+    optional string data = 4;           // Datos
+    optional bytes image = 5;           // Imagen Avatar
+
+    enum MessageType {
+        TEXT = 0;
+        LOGIN = 1;
+        AVATAR = 2;
+        JOINROOM = 3;
+    }
+}

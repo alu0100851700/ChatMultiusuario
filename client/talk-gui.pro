@@ -6,6 +6,9 @@
 
 QT       += core gui
 QT       += network
+QT       += multimedia
+QT       += multimediawidgets
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,15 +20,22 @@ CONFIG += openssl-linked
 SOURCES += main.cpp\
         mainwindow.cpp \
     aboutdialog.cpp \
-    settingsdialog.cpp
+    settingsdialog.cpp \
+    webcam.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
-    settingsdialog.h
+    settingsdialog.h \
+    webcam.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
-    settingsdialog.ui
+    settingsdialog.ui \
+    webcam.ui
+
+PROTOS = talkmessage.proto
+include(protobuf.pri)
+LIBS += -lprotobuf
 
 unix {# Esta configuración es específica de Linux y UNIX
     # Variables
