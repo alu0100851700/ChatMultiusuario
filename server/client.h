@@ -8,7 +8,6 @@
 #include <QDateTime>
 #include <QSettings>
 
-
 class Client : public QObject
 {
     Q_OBJECT

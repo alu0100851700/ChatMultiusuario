@@ -6,7 +6,6 @@
 #include <QTcpServer>
 #include <QSettings>
 
-
 #include "client.h"
 
 class Server: public QTcpServer

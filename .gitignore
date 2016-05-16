@@ -1,0 +1,7 @@
+moc*
+*.o
+*.pb.*
+Makefile
+server
+talk-gui
+.pro.user*

@@ -15,3 +15,7 @@ SOURCES += main.cpp \
 HEADERS += \
     server.h \
     client.h
+
+PROTOS = talkmessage.proto
+include(protobuf.pri)
+LIBS += -lprotobuf
