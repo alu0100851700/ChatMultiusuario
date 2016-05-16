@@ -177,6 +177,15 @@ void MainWindow::webcamOptions()
 {
     Webcam cam;
     cam.exec();
+    QSettings settings;
+    QString filename =
+            settings.value("rutaAvatar",QCoreApplication::applicationDirPath()+
+                           "/default.jpg").toString();
+    QPixmap imagen;
+    imagen.load(filename);
+    QIcon ButtonIcon(imagen);
+    ui->Avatar->setIcon(ButtonIcon);
+    ui->Avatar->setIconSize(QSize(100,100));
 }
 
 void MainWindow::cargarImagenOptions()
