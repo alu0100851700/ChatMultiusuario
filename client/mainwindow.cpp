@@ -40,7 +40,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QIcon ButtonIcon(imagen);
     ui->Avatar->setIcon(ButtonIcon);
     ui->Avatar->setIconSize(QSize(100,100));
-    //ui->Avatar->setLayout();
 
     /*//////////////////////////////*/
     if (sslSocket_->supportsSsl())
@@ -115,7 +114,6 @@ void MainWindow::on_inputTextEdit_returnPressed()
     ui->outputTextEdit->appendPlainText(line);
     line += '\n';
 
-    //sslSocket_->write(line.toLocal8Bit().constData());
     ui->inputTextEdit->clear();
 
     Message message;
@@ -131,7 +129,6 @@ void MainWindow::on_inputTextEdit_returnPressed()
 
     message.set_data(line.toUtf8().constData(),
                      line.toUtf8().length());
-
 
     std::string buffer;
     message.SerializeToString(&buffer);
@@ -151,7 +148,6 @@ void MainWindow::handleDisconnect()
     ui->connectButton->setText("Connect");
     isConnected_=false;
 }
-
 
 void MainWindow ::leer_socketservidor()
 {
@@ -191,14 +187,16 @@ void MainWindow::webcamOptions()
 void MainWindow::cargarImagenOptions()
 {
     QString filename = QFileDialog::getOpenFileName(this,"Foto",QDir::homePath(),
-                                                    "Imagen (*.jpg,*.jpeg)");
-    QSettings settings;
-    settings.setValue("rutaAvatar",filename);
-    QPixmap imagen;
-    imagen.load(filename);
-    QIcon ButtonIcon(imagen);
-    ui->Avatar->setIcon(ButtonIcon);
-    ui->Avatar->setIconSize(QSize(100,100));
+                                                    "Imagen (*.jpg *.jpeg)");
+    if(!filename.isEmpty()){
+        QSettings settings;
+        settings.setValue("rutaAvatar",filename);
+        QPixmap imagen;
+        imagen.load(filename);
+        QIcon ButtonIcon(imagen);
+        ui->Avatar->setIcon(ButtonIcon);
+        ui->Avatar->setIconSize(QSize(100,100));
+    }
 
 }
 

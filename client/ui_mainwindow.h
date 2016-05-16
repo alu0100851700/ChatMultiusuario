@@ -99,8 +99,14 @@ public:
 
         Avatar = new QPushButton(MainWindow);
         Avatar->setObjectName(QStringLiteral("Avatar"));
+        QSizePolicy sizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(Avatar->sizePolicy().hasHeightForWidth());
+        Avatar->setSizePolicy(sizePolicy);
         Avatar->setLayoutDirection(Qt::LeftToRight);
         Avatar->setIconSize(QSize(16, 16));
+        Avatar->setFlat(true);
 
         verticalLayout_2->addWidget(Avatar);
 
