@@ -22,9 +22,7 @@ public:
     explicit Webcam(QWidget *parent = 0);
     ~Webcam();
 private slots:
-    void startCamera();
-    void stopCamera();
-    void captureCamera();
+    void on_CapturePushButton_clicked();
 
 private:
     Ui::Webcam *ui;
@@ -32,10 +30,7 @@ private:
     QCameraViewfinder *mCameraViewfinder;
     QCameraImageCapture *mCameraImageCapture;
     QVBoxLayout *mLayout;
-    QMenu *mOpcionesMenu;
-    QAction *mEncenderAction;
-    QAction *mApagarAction;
-    QAction *mCapturaAction;
+
 };
 
 #endif // WEBCAM_H

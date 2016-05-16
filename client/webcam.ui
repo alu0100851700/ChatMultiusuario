@@ -15,9 +15,9 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QPushButton" name="OpcionesPushButton">
+    <widget class="QPushButton" name="CapturePushButton">
      <property name="text">
-      <string>Options</string>
+      <string>Capture</string>
      </property>
     </widget>
    </item>

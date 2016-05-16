@@ -27,7 +27,7 @@ class Ui_Webcam
 {
 public:
     QVBoxLayout *verticalLayout;
-    QPushButton *OpcionesPushButton;
+    QPushButton *CapturePushButton;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
     QDialogButtonBox *buttonBox;
@@ -39,10 +39,10 @@ public:
         Webcam->resize(400, 300);
         verticalLayout = new QVBoxLayout(Webcam);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        OpcionesPushButton = new QPushButton(Webcam);
-        OpcionesPushButton->setObjectName(QStringLiteral("OpcionesPushButton"));
+        CapturePushButton = new QPushButton(Webcam);
+        CapturePushButton->setObjectName(QStringLiteral("CapturePushButton"));
 
-        verticalLayout->addWidget(OpcionesPushButton);
+        verticalLayout->addWidget(CapturePushButton);
 
         scrollArea = new QScrollArea(Webcam);
         scrollArea->setObjectName(QStringLiteral("scrollArea"));
@@ -72,7 +72,7 @@ public:
     void retranslateUi(QDialog *Webcam)
     {
         Webcam->setWindowTitle(QApplication::translate("Webcam", "Dialog", 0));
-        OpcionesPushButton->setText(QApplication::translate("Webcam", "Options", 0));
+        CapturePushButton->setText(QApplication::translate("Webcam", "Capture", 0));
     } // retranslateUi
 
 };

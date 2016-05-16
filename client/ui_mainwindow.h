@@ -99,6 +99,8 @@ public:
 
         Avatar = new QPushButton(MainWindow);
         Avatar->setObjectName(QStringLiteral("Avatar"));
+        Avatar->setLayoutDirection(Qt::LeftToRight);
+        Avatar->setIconSize(QSize(16, 16));
 
         verticalLayout_2->addWidget(Avatar);
 
@@ -118,7 +120,7 @@ public:
         setupButton->setText(QApplication::translate("MainWindow", "Configure...", 0));
         exitButton->setText(QApplication::translate("MainWindow", "Exit", 0));
         aboutButton->setText(QApplication::translate("MainWindow", "About", 0));
-        Avatar->setText(QApplication::translate("MainWindow", "Avatar", 0));
+        Avatar->setText(QString());
     } // retranslateUi
 
 };

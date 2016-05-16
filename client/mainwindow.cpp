@@ -4,6 +4,8 @@
 #include <webcam.h>
 #include <QSettings>
 #include <QTcpSocket>
+#include <QFileDialog>
+#include <QPixmap>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -15,8 +17,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QSettings settings;
 
-
+    /*//////OPCIONES DE AVATAR//////*/
     mAvatarMenu = new QMenu("Avatar",this);
     mWebcamAction = new QAction("Webcam",this);
     mCargarAction = new QAction("CargarFichero",this);
@@ -25,6 +28,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->Avatar->setMenu(mAvatarMenu);
     connect(mWebcamAction, SIGNAL(triggered()), this, SLOT(webcamOptions()));
+    connect(mCargarAction, SIGNAL(triggered()), this,
+            SLOT(cargarImagenOptions()));
+
+
+    QString filename =
+            settings.value("rutaAvatar",QCoreApplication::applicationDirPath()+
+                           "/default.jpg").toString();
+    QPixmap imagen;
+    imagen.load(filename);
+    QIcon ButtonIcon(imagen);
+    ui->Avatar->setIcon(ButtonIcon);
+    ui->Avatar->setIconSize(QSize(100,100));
+    //ui->Avatar->setLayout();
+
+    /*//////////////////////////////*/
     if (sslSocket_->supportsSsl())
       {
         ui->connectButton->setEnabled(true);
@@ -136,13 +154,7 @@ void MainWindow::handleDisconnect()
 
 
 void MainWindow ::leer_socketservidor()
-{/*
-     while(sslSocket_->canReadLine()){
-         QByteArray dataIn=sslSocket_->readLine();
-         ui->outputTextEdit->appendPlainText(QString (dataIn));
-     }
-     */
-
+{
     Message message;
     QByteArray data;
 
@@ -169,6 +181,15 @@ void MainWindow::webcamOptions()
 
 void MainWindow::cargarImagenOptions()
 {
+    QString filename = QFileDialog::getOpenFileName(this,"Foto",QDir::homePath(),
+                                                    "Imagen (*.jpg,*.jpeg)");
+    QSettings settings;
+    settings.setValue("rutaAvatar",filename);
+    QPixmap imagen;
+    imagen.load(filename);
+    QIcon ButtonIcon(imagen);
+    ui->Avatar->setIcon(ButtonIcon);
+    ui->Avatar->setIconSize(QSize(100,100));
 
 }
 
