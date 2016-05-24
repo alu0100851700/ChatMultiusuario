@@ -29,6 +29,7 @@ Client::Client(QSslSocket *sslSocket, QObject *parent)
 
 void Client::readData()
 {
+
     QString text = QString("[%1] Incomming Data from %2:%3")
             .arg(QDateTime::currentDateTime().toString("hh:mm:ss ap"))
             .arg((sslSocket_->peerAddress()).toString())
@@ -36,15 +37,36 @@ void Client::readData()
 
     std::cout << text.toUtf8().constData() << std::endl;
 
+    Message message;
+
     QByteArray data;
-    while(sslSocket_->canReadLine()){
-        data += sslSocket_->readLine();
+    while( sslSocket_->bytesAvailable() > 0 ){
+        data += sslSocket_->readAll();
     }
 
+    message.ParseFromArray(data,data.length());
 
-    for(int i = 0 ; i < list.length() ; i++ )
-        if( list[i] != this )
-            list[i]->sslSocket_->write(data);
+    if( message.type() == Message::TEXT ){          //Mensaje de texto
+        for( int i = 0 ; i < list.length() ; i++ )
+            if( list[i] != this )
+                list[i]->sslSocket_->write(data);
+    }
+    else if( message.type() == Message::AVATAR ){   //Mensaje de avatar
+        //Añadir avatar a la base de datos
+        for( int i = 0 ; i < list.length() ; i++ )
+            if( list[i] != this )
+                list[i]->sslSocket_->write(data);
+    }
+    else if( message.type() == Message::LOGIN  ){   //Mensaje de login
+        std::string username = message.username();
+        std::string password = message.data();
+        //Comprobar si está en la base de datos y coincide
+        //Si no está agregarlo
+    }
+    else if( message.type() == Message::JOINROOM ){ //Mensaje para entrar en sala
+        std::string room = message.data();
+    }
+
 
 }
 

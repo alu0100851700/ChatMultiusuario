@@ -2,6 +2,6 @@ moc*
 *.o
 *.pb.*
 Makefile
-server
+server/server
 talk-gui
-.pro.user*
+*.pro.user*

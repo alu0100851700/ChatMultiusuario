@@ -8,6 +8,8 @@
 #include <QDateTime>
 #include <QSettings>
 
+#include "talkmessage.pb.h"
+
 class Client : public QObject
 {
     Q_OBJECT
