@@ -7,6 +7,8 @@
 #include <QSsl>
 #include <QDateTime>
 #include <QSettings>
+#include <QDir>
+
 
 #include "talkmessage.pb.h"
 

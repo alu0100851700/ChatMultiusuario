@@ -7,8 +7,8 @@ Client::Client(QSslSocket *sslSocket, QObject *parent)
     : QObject(parent), sslSocket_(sslSocket)
 {
 
-    QString key = settings.value("sslkey").toString();
-    QString crt = settings.value("sslcrt").toString();
+    QString key = settings.value("sslkey",QDir::currentPath() + "/certificate/server.key").toString();
+    QString crt = settings.value("sslcrt",QDir::currentPath() + "/certificate/server.crt").toString();
 
     if(sslSocket_->supportsSsl()){
         connect(sslSocket_, SIGNAL(encrypted()), this, SLOT(handshakeComplete()));

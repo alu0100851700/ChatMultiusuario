@@ -5,3 +5,4 @@ Makefile
 server/server
 talk-gui
 *.pro.user*
+ui_*.h
