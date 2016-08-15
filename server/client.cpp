@@ -3,8 +3,8 @@
 
 QList<Client*> Client::list;
 
-Client::Client(QSslSocket *sslSocket, QFile* history, QObject *parent)
-    : QObject(parent), sslSocket_(sslSocket), history_(history)
+Client::Client(QSslSocket *sslSocket, QObject *parent)
+    : QObject(parent), sslSocket_(sslSocket), room_(NULL)
 {
 
     QString key = settings.value("sslkey",QDir::currentPath() + "/certificate/server.key").toString();
@@ -26,8 +26,21 @@ Client::Client(QSslSocket *sslSocket, QFile* history, QObject *parent)
 
     }
 
+    // PRUEBA SALA ÚNICA
+    /*
+    bool existsRoom = false;
+    QString name = "room1";
 
+    for(int i=0; i < Room::list.size(); i++){
 
+        if( Room::list[i]->name_ == name )
+            existsRoom = true;
+            room_ = Room::list[i];
+        }
+     if (!existsRoom)   room_ = new Room(name);
+
+     room_->join(this);
+*/
 }
 
 void Client::readData()
@@ -50,13 +63,9 @@ void Client::readData()
     message.ParseFromArray(data,data.length());
 
     if( message.type() == Message::TEXT ){          //Mensaje de texto
-        for( int i = 0 ; i < list.length() ; i++ )
-            if( list[i] != this )
-                list[i]->sslSocket_->write(data);
 
-        history_->open(QIODevice::Append);
-        history_->write(data, data.length());
-        history_->close();
+        room_->send(this, data);
+
     }
     else if( message.type() == Message::AVATAR ){   //Mensaje de avatar
         //Añadir avatar a la base de datos
@@ -71,7 +80,32 @@ void Client::readData()
         //Si no está agregarlo
     }
     else if( message.type() == Message::JOINROOM ){ //Mensaje para entrar en sala
-        std::string room = message.data();
+        QString name = message.data().c_str();
+
+        std::cout << "JOINROOM" << name.toUtf8().constData() << std::endl;
+        //--------- JOIN ROOM ------------
+        bool existsRoom = false;
+         for(int i=0; i < Room::list.size(); i++){
+            std::cout << 1 << std::endl; ////////////////////
+           if( Room::list[i]->name_ == name )
+               existsRoom = true;
+               room_ = Room::list[i];
+          }
+
+
+
+          if(room_ != NULL){
+           room_->leave(this);
+          }
+
+          if(!existsRoom ){
+           room_ = new Room(name);
+           Room::list.append(room_);
+          }
+
+          room_->join(this);
+
+
     }
 
 
@@ -105,23 +139,5 @@ void Client::handshakeComplete()
 
     std::cout << text.toUtf8().constData() << std::endl;
 
-    sendHistory();
 }
 
-void Client::sendHistory()
-{
-    if (!history_->open(QIODevice::ReadOnly | QFile::Text))
-              return;
-
-    while(!history_->atEnd()){
-        QByteArray line = history_->readLine();
-
-        sslSocket_->write(line, line.length());
-
-        std::cout << "ll: " << line.length() << " " << line.toStdString() << std::endl;
-    }
-
-
-    history_->close();
-
-}

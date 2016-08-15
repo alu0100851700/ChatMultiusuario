@@ -10,11 +10,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     server.cpp \
-    client.cpp
+    client.cpp \
+    room.cpp
 
 HEADERS += \
     server.h \
-    client.h
+    client.h \
+    room.h
 
 PROTOS = talkmessage.proto
 include(protobuf.pri)

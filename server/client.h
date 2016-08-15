@@ -9,8 +9,10 @@
 #include <QSettings>
 #include <QDir>
 
-
+#include "room.h"
 #include "talkmessage.pb.h"
+
+class Room;
 
 class Client : public QObject
 {
@@ -20,7 +22,9 @@ public:
 
     static QList<Client*> list;
 
-    Client(QSslSocket* sslSocket, QFile* history, QObject *parent);
+    Client(QSslSocket* sslSocket, QObject *parent);
+
+    QSslSocket *sslSocket_;
 
 
 private slots:
@@ -30,13 +34,13 @@ private slots:
     void socketError(QAbstractSocket::SocketError);
     void handshakeComplete();
 
+
+
 private:
 
-    void sendHistory();
 
-    QSslSocket *sslSocket_;
     QSettings settings;
-    QFile *history_;
+    Room *room_;
 
 };
 

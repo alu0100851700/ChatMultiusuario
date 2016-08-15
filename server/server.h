@@ -7,6 +7,7 @@
 #include <QSettings>
 #include <QDir>
 #include "client.h"
+#include "room.h"
 
 class Server: public QTcpServer
 {
@@ -21,7 +22,5 @@ private:
 
     QSettings settings;
     void incomingConnection(qintptr socketDescriptor);
-    QFile *history_;
-
 };
 #endif // SERVER_H
