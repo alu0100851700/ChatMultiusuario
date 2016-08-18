@@ -20,7 +20,7 @@ public:
 
     static QList<Client*> list;
 
-    Client(QSslSocket* sslSocket, QObject *parent);
+    Client(QSslSocket* sslSocket, QFile* history, QObject *parent);
 
 
 private slots:
@@ -32,8 +32,11 @@ private slots:
 
 private:
 
+    void sendHistory();
+
     QSslSocket *sslSocket_;
     QSettings settings;
+    QFile *history_;
 
 };
 

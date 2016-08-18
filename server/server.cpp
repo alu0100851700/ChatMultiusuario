@@ -11,13 +11,20 @@ Server::Server(QObject *parent)
 
     listen(QHostAddress::Any, listenPort);
 
+
+    //Crea directorio /home/***/.talkserver
+    QDir historyDirectory(QDir::homePath() + "/.talkServer");
+    if(!historyDirectory.exists())
+            historyDirectory.mkdir(QDir::homePath() + "/.talkServer");
+
+    history_ = new QFile(QDir::homePath() + "/.talkServer/history");
 }
 
 void Server::incomingConnection(qintptr socketDescriptor)
 {
     QSslSocket *sslSocket = new QSslSocket;
     if (sslSocket->setSocketDescriptor(socketDescriptor)) {
-        Client *newClient = new Client(sslSocket, this);
+        Client *newClient = new Client(sslSocket, history_, this);
         Client::list.append(newClient);
     } else {
         delete sslSocket;

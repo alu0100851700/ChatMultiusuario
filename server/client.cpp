@@ -3,8 +3,8 @@
 
 QList<Client*> Client::list;
 
-Client::Client(QSslSocket *sslSocket, QObject *parent)
-    : QObject(parent), sslSocket_(sslSocket)
+Client::Client(QSslSocket *sslSocket, QFile* history, QObject *parent)
+    : QObject(parent), sslSocket_(sslSocket), history_(history)
 {
 
     QString key = settings.value("sslkey",QDir::currentPath() + "/certificate/server.key").toString();
@@ -25,6 +25,9 @@ Client::Client(QSslSocket *sslSocket, QObject *parent)
 
 
     }
+
+
+
 }
 
 void Client::readData()
@@ -50,6 +53,10 @@ void Client::readData()
         for( int i = 0 ; i < list.length() ; i++ )
             if( list[i] != this )
                 list[i]->sslSocket_->write(data);
+
+        history_->open(QIODevice::Append);
+        history_->write(data, data.length());
+        history_->close();
     }
     else if( message.type() == Message::AVATAR ){   //Mensaje de avatar
         //Añadir avatar a la base de datos
@@ -97,4 +104,24 @@ void Client::handshakeComplete()
             .arg(sslSocket_->peerPort());
 
     std::cout << text.toUtf8().constData() << std::endl;
+
+    sendHistory();
+}
+
+void Client::sendHistory()
+{
+    if (!history_->open(QIODevice::ReadOnly | QFile::Text))
+              return;
+
+    while(!history_->atEnd()){
+        QByteArray line = history_->readLine();
+
+        sslSocket_->write(line, line.length());
+
+        std::cout << "ll: " << line.length() << " " << line.toStdString() << std::endl;
+    }
+
+
+    history_->close();
+
 }
