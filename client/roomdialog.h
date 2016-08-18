@@ -19,12 +19,16 @@ class RoomDialog : public QDialog
 public:
     explicit RoomDialog(QWidget *parent = 0);
     ~RoomDialog();
+     void initializeSocket(QSslSocket* sslSocket);
+
 
 private slots:
     void on_buttonBox_accepted();
 
 private:
     Ui::RoomDialog *ui;
+    QSslSocket *sslSocket_;
+
 };
 
 #endif // ROOMDIALOG_H

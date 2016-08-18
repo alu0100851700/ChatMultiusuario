@@ -4,6 +4,7 @@
 
 RoomDialog::RoomDialog(QWidget *parent) :
     QDialog(parent),
+    sslSocket_(NULL),
     ui(new Ui::RoomDialog)
 {
     ui->setupUi(this);
@@ -16,7 +17,7 @@ RoomDialog::~RoomDialog()
 
 void RoomDialog::on_buttonBox_accepted()
 {
-    QSslSocket *sslSocket=new QSslSocket;
+
     QString line=ui->roomLineEdit->text() ;
 
     Message message;
@@ -28,5 +29,9 @@ void RoomDialog::on_buttonBox_accepted()
     std::string buffer;
     message.SerializeToString(&buffer);
 
-    sslSocket->write(buffer.c_str(), buffer.size());
+    sslSocket_->write(buffer.c_str(), buffer.size());
 }
+
+ void RoomDialog::initializeSocket(QSslSocket* sslSocket){
+     sslSocket_=sslSocket;
+ }

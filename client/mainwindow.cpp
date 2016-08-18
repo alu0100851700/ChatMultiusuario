@@ -216,5 +216,6 @@ void MainWindow::sslErrors(const QList<QSslError> &errors)
 void MainWindow::on_pushButton_2_clicked()
 {
     RoomDialog di;
+    di.initializeSocket(sslSocket_);
     di.exec();
 }
