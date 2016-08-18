@@ -19,8 +19,13 @@ void RoomDialog::on_buttonBox_accepted()
 {
 
     QString line=ui->roomLineEdit->text() ;
+    QSettings settings;
+
+    QString username = settings.value("username").toString();
 
     Message message;
+    message.set_username(username.toUtf8().constData(),
+                         username.toUtf8().length());
     message.set_timestamp(0);
     message.set_type(Message::JOINROOM);
     message.set_data(line.toUtf8().constData(),

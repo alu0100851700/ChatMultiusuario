@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QSslSocket>
+#include <QSettings>
 
 #include "talkmessage.pb.h"
 
@@ -28,6 +29,7 @@ private slots:
 private:
     Ui::RoomDialog *ui;
     QSslSocket *sslSocket_;
+
 
 };
 
