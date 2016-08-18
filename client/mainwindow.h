@@ -41,6 +41,8 @@ private slots:
     void sslErrors(const QList<QSslError> &errors);
 
 
+    void on_pushButton_2_clicked();
+
 public slots:
     void leer_socketservidor();
     void webcamOptions();

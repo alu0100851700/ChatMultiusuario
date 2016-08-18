@@ -1,4 +1,5 @@
 #include <QMessageBox>
+#include "roomdialog.h"
 #include <aboutdialog.h>
 #include <settingsdialog.h>
 #include <webcam.h>
@@ -6,6 +7,7 @@
 #include <QTcpSocket>
 #include <QFileDialog>
 #include <QPixmap>
+#include <login.h>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -210,3 +212,9 @@ void MainWindow::sslErrors(const QList<QSslError> &errors)
     sslSocket_->ignoreSslErrors();
 }
 
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    RoomDialog di;
+    di.exec();
+}

@@ -8,7 +8,7 @@ QT       += core gui
 QT       += network
 QT       += multimedia
 QT       += multimediawidgets
-
+QT       += sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,17 +21,23 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     aboutdialog.cpp \
     settingsdialog.cpp \
-    webcam.cpp
+    webcam.cpp \
+    roomdialog.cpp \
+    login.cpp
 
 HEADERS  += mainwindow.h \
     aboutdialog.h \
     settingsdialog.h \
-    webcam.h
+    webcam.h \
+    roomdialog.h \
+    login.h
 
 FORMS    += mainwindow.ui \
     aboutdialog.ui \
     settingsdialog.ui \
-    webcam.ui
+    webcam.ui \
+    roomdialog.ui \
+    login.ui
 
 PROTOS = talkmessage.proto
 include(protobuf.pri)
