@@ -168,7 +168,6 @@ void MainWindow ::leer_socketservidor()
         std::string text = message.data();
         ui->outputTextEdit->appendPlainText(QString::fromUtf8(text.c_str()));
     }
-
 }
 
 void MainWindow::webcamOptions()
