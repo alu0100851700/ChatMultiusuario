@@ -4,7 +4,7 @@
 QList<Client*> Client::list;
 
 Client::Client(QSslSocket *sslSocket, QObject *parent)
-    : QObject(parent), sslSocket_(sslSocket), room_(NULL)
+    : QObject(parent), sslSocket_(sslSocket), room_(NULL), transferedData_(0)
 {
 
     QString key = settings.value("sslkey",QDir::currentPath() + "/certificate/server.key").toString();
@@ -26,21 +26,32 @@ Client::Client(QSslSocket *sslSocket, QObject *parent)
 
     }
 
-    // PRUEBA SALA ÚNICA
-    /*
+    // PRUEBA SALA POR DEFECTO
+
     bool existsRoom = false;
-    QString name = "room1";
+    QString name = "default";
 
-    for(int i=0; i < Room::list.size(); i++){
-
-        if( Room::list[i]->name_ == name )
+    for(int i=0; i < Room::list.length(); i++){
+        if( Room::list[i]->name_ == name ){
             existsRoom = true;
             room_ = Room::list[i];
         }
+    }
+
      if (!existsRoom)   room_ = new Room(name);
 
      room_->join(this);
-*/
+
+}
+
+int Client::get_trasferedData()
+{
+    return transferedData_;
+}
+
+void Client::reset_transferedData()
+{
+    transferedData_ = 0;
 }
 
 void Client::readData()
@@ -60,6 +71,8 @@ void Client::readData()
         data += sslSocket_->readAll();
     }
 
+    transferedData_ += data.length();
+
     message.ParseFromArray(data,data.length());
 
     if( message.type() == Message::TEXT ){          //Mensaje de texto
@@ -69,9 +82,11 @@ void Client::readData()
     }
     else if( message.type() == Message::AVATAR ){   //Mensaje de avatar
         //Añadir avatar a la base de datos
+        /*
         for( int i = 0 ; i < list.length() ; i++ )
             if( list[i] != this )
                 list[i]->sslSocket_->write(data);
+                */
     }
     else if( message.type() == Message::LOGIN  ){   //Mensaje de login
         std::string username = message.username();
@@ -84,26 +99,21 @@ void Client::readData()
 
         std::cout << "JOINROOM" << name.toUtf8().constData() << std::endl;
         //--------- JOIN ROOM ------------
+        if(room_ != NULL){
+            room_->leave(this);
+        }
+
         bool existsRoom = false;
-         for(int i=0; i < Room::list.size(); i++){
-            std::cout << 1 << std::endl; ////////////////////
-           if( Room::list[i]->name_ == name )
-               existsRoom = true;
-               room_ = Room::list[i];
-          }
+        for(int i=0; i < Room::list.length(); i++){
+            if( Room::list[i]->name_ == name )
+                existsRoom = true;
+                room_ = Room::list[i];
+        }
+
+        if(!existsRoom )    room_ = new Room(name);
 
 
-
-          if(room_ != NULL){
-           room_->leave(this);
-          }
-
-          if(!existsRoom ){
-           room_ = new Room(name);
-           Room::list.append(room_);
-          }
-
-          room_->join(this);
+        room_->join(this);
 
 
     }

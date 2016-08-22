@@ -26,6 +26,9 @@ public:
 
     QSslSocket *sslSocket_;
 
+    int get_trasferedData();
+    void reset_transferedData();
+
 
 private slots:
 
@@ -41,6 +44,7 @@ private:
 
     QSettings settings;
     Room *room_;
+    int transferedData_;
 
 };
 

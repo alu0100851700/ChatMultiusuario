@@ -7,7 +7,7 @@
 #include <QSslSocket>
 #include <QDir>
 #include <QList>
-
+#include <algorithm>
 
 #include "talkmessage.pb.h"
 
@@ -24,10 +24,14 @@ public:
     void send(Client *client, QByteArray data);
     QString name_;
 
+    int get_trasferedData();
+    void reset_transferedData();
+
 private:
 
-    void sendHistory(Client *client);
-    QFile *history_;
+    void    sendHistory(Client *client);
+    int     transferedData_;
+    QFile   *history_;
     QList<Client*> clients_;
 };
 

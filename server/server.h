@@ -6,6 +6,7 @@
 #include <QTcpServer>
 #include <QSettings>
 #include <QDir>
+#include <QTimer>
 #include "client.h"
 #include "room.h"
 
@@ -22,5 +23,10 @@ private:
 
     QSettings settings;
     void incomingConnection(qintptr socketDescriptor);
+    QTimer *timer_;
+    QFile *stadistics_;
+
+private slots:
+    void updateStadistics();
 };
 #endif // SERVER_H
