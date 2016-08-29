@@ -4,7 +4,11 @@
 QList<Client*> Client::list;
 
 Client::Client(QSslSocket *sslSocket, QObject *parent)
-    : QObject(parent), sslSocket_(sslSocket), room_(NULL), transferedData_(0)
+    : QObject(parent),
+      sslSocket_(sslSocket),
+      room_(NULL),
+      transferedData_(0),
+      logged(false)
 {
 
     QString key = settings.value("sslkey",QDir::currentPath() + "/certificate/server.key").toString();
@@ -28,19 +32,7 @@ Client::Client(QSslSocket *sslSocket, QObject *parent)
 
     // PRUEBA SALA POR DEFECTO
 
-    bool existsRoom = false;
-    QString name = "default";
-
-    for(int i=0; i < Room::list.length(); i++){
-        if( Room::list[i]->name_ == name ){
-            existsRoom = true;
-            room_ = Room::list[i];
-        }
-    }
-
-     if (!existsRoom)   room_ = new Room(name);
-
-     room_->join(this);
+    joinRoom("default");
 
 }
 
@@ -89,33 +81,86 @@ void Client::readData()
                 */
     }
     else if( message.type() == Message::LOGIN  ){   //Mensaje de login
-        std::string username = message.username();
-        std::string password = message.data();
+        QString username = QString::fromStdString(message.username());
+        QString password = QString::fromStdString(message.data());
         //Comprobar si está en la base de datos y coincide
         //Si no está agregarlo
+
+        /*************************** DATABASE *******************************/
+        // Create database
+        QString dbpath = "login.sqlite";
+        QSqlDatabase login_db = QSqlDatabase::addDatabase("QSQLITE");
+        login_db.setDatabaseName(dbpath);
+
+        if(!login_db.open())
+            qDebug() << "Failed to open database...";
+        else
+            qDebug()<< "Conected to login database";
+
+        QSqlQuery query(login_db);
+
+
+        query.exec("SELECT PASSWORD                     "
+                   "FROM LOGIN_TB                       "
+                   "WHERE USERNAME = '" + username + "';");
+        query.next();
+
+        if(!query.next()){   // User does not exists
+            query.exec("INSERT INTO LOGIN_TB            "
+                       "VALUES('" + username + "', '" + password +"');    ");
+
+            query.exec("SELECT PASSWORD                     "
+                       "FROM LOGIN_TB                       "
+                       "WHERE USERNAME = '" + username + "';");
+            query.next();
+        }
+
+        QString dbpassword = query.value(0).toString();
+
+        QString text;
+
+        if(password == dbpassword){
+            logged = true;
+            qDebug() << username.toUpper() + " logged in";
+            joinRoom("premium");
+            text = "Your login was successful";
+        }
+        else{
+            qDebug() << username.toUpper() + " failed while logging";
+            text = "Wrong password";
+        }
+
+
+        login_db.close();
+        /*******************************************************************/
+
+
+
+        /**************************** MESSAGE ******************************/
+        Message message;
+        QString S_username = "Server";
+
+        message.set_username(S_username.toUtf8().constData(),
+                             S_username.toUtf8().length());
+
+        message.set_timestamp(QDateTime::currentDateTime().toMSecsSinceEpoch());
+
+        message.set_type(Message::TEXT);
+
+        message.set_data(text.toUtf8().constData(),
+                         text.toUtf8().length());
+
+        std::string buffer;
+        message.SerializeToString(&buffer);
+
+        sslSocket_->write(buffer.c_str(), buffer.size());
+
+
+        /*******************************************************************/
     }
     else if( message.type() == Message::JOINROOM ){ //Mensaje para entrar en sala
         QString name = message.data().c_str();
-
-        std::cout << "JOINROOM" << name.toUtf8().constData() << std::endl;
-        //--------- JOIN ROOM ------------
-        if(room_ != NULL){
-            room_->leave(this);
-        }
-
-        bool existsRoom = false;
-        for(int i=0; i < Room::list.length(); i++){
-            if( Room::list[i]->name_ == name )
-                existsRoom = true;
-                room_ = Room::list[i];
-        }
-
-        if(!existsRoom )    room_ = new Room(name);
-
-
-        room_->join(this);
-
-
+        joinRoom(name);
     }
 
 
@@ -149,5 +194,46 @@ void Client::handshakeComplete()
 
     std::cout << text.toUtf8().constData() << std::endl;
 
+}
+
+void Client::joinRoom(QString name)
+{
+    if(logged || name == "default"){
+        if(room_ != NULL){
+            room_->leave(this);
+        }
+
+        bool existsRoom = false;
+        for(int i=0; i < Room::list.length(); i++){
+            if( Room::list[i]->name_ == name )
+                existsRoom = true;
+                room_ = Room::list[i];
+        }
+
+        if(!existsRoom )    room_ = new Room(name);
+
+
+        room_->join(this);
+    }
+    else{
+        Message message;
+        QString text = "Log in to change room";
+        QString username = "Server";
+
+        message.set_username(username.toUtf8().constData(),
+                             username.toUtf8().length());
+
+        message.set_timestamp(QDateTime::currentDateTime().toMSecsSinceEpoch());
+
+        message.set_type(Message::TEXT);
+
+        message.set_data(text.toUtf8().constData(),
+                         text.toUtf8().length());
+
+        std::string buffer;
+        message.SerializeToString(&buffer);
+
+        sslSocket_->write(buffer.c_str(), buffer.size());
+    }
 }
 

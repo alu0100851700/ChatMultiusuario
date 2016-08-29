@@ -7,6 +7,10 @@
 #include <QSettings>
 #include <QDir>
 #include <QTimer>
+#include <QtSql/QtSql>
+
+
+
 #include "client.h"
 #include "room.h"
 

@@ -4,20 +4,47 @@
 Server::Server(QObject *parent)
     : QTcpServer(parent)
 {
-    //Recuperar configuración
-    int listenPort = settings.value("port",6000).toInt(); //Por defecto 6000
+    // Restore configuration
+    int listenPort = settings.value("port",6000).toInt(); // Default: 6000
 
     std::cout << QString("Server listenting for connections on %1\n").arg(listenPort).toUtf8().constData() << std::endl;
 
     listen(QHostAddress::Any, listenPort);
 
 
+
+
+    /*************************** DATABASE *******************************/
+    // Create database
+    QString dbpath = "login.sqlite";
+    QSqlDatabase login_db =  QSqlDatabase::addDatabase("QSQLITE");
+    login_db.setDatabaseName(dbpath);
+
+    if(!login_db.open())
+        qDebug() << "Failed to open database...";
+    else
+        qDebug()<< "Conected to login database";
+
+    QSqlQuery query(login_db);
+
+    // Create login table
+
+    query.exec("CREATE TABLE LOGIN_TB(                      "
+               "    USERNAME    VARCHAR(20) PRIMARY KEY,    "
+               "    PASSWORD    VARCHAR(20));               ");
+
+
+    login_db.close();
+    /*******************************************************************/
+
+    // Stadistics file
     QDir serverDirectory(QDir::homePath() + "/.talkServer/log");
     if(!serverDirectory.exists())
             serverDirectory.mkdir(QDir::homePath() + "/.talkServer/log");
 
     stadistics_ = new QFile(QDir::homePath() + "/.talkServer/log/stadistic.log");
 
+    // Stadistics timer
     timer_ = new QTimer(this);
     connect(timer_, SIGNAL(timeout()), this, SLOT(updateStadistics()));
 
@@ -43,7 +70,7 @@ void Server::updateStadistics()
     if (!stadistics_->open(QIODevice::Append | QIODevice::Text))
             return;
 
-    /************* CALCULO LLEGADA BITS ********************/
+    /******************* INCOMING BITS **********************/
     int inTransferedData=0;
     for(int i=0; i<Client::list.length(); i++){
         inTransferedData += Client::list[i]->get_trasferedData();
@@ -54,7 +81,7 @@ void Server::updateStadistics()
     /*******************************************************/
 
 
-    /************* CALCULO SALIDA BITS ********************/
+    /***************** OUTGOING BITS **********************/
     int outTransferedData=0;
     for(int i=0; i<Room::list.length(); i++){
         outTransferedData += Room::list[i]->get_trasferedData();

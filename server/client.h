@@ -8,6 +8,8 @@
 #include <QDateTime>
 #include <QSettings>
 #include <QDir>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 #include "room.h"
 #include "talkmessage.pb.h"
@@ -45,6 +47,9 @@ private:
     QSettings settings;
     Room *room_;
     int transferedData_;
+    bool logged;
+
+    void joinRoom(QString name);
 
 };
 
