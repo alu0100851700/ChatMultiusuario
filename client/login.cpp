@@ -1,8 +1,6 @@
 #include "login.h"
 #include "roomdialog.h"
 #include "ui_login.h"
-#include <QSqlDatabase>
-#include <QSqlQuery>
 #include <QDebug>
 #include <QSqlError>
 Login::Login(QWidget *parent) :
@@ -11,14 +9,17 @@ Login::Login(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QSettings settings;
 
-    QSqlDatabase myDb=QSqlDatabase::addDatabase("QSQLITE");
-    myDb.setDatabaseName("/home/mikma/documents/SOA/TalkDefinitivo/ChatMultiusuario/loginDB.sqlite");
 
-    if(!myDb.open())
-        ui->statusLabel->setText("Failed to open the database...");
-    else
-        ui->statusLabel->setText("Connected.");
+
+    QString username = settings.value("username").toString();
+
+    if( username.isNull() || username.isEmpty())
+        username= getenv("USER");
+
+    ui->lineEdit_username->setText(username);
+
 }
 
 Login::~Login()
@@ -26,37 +27,44 @@ Login::~Login()
     delete ui;
 }
 
+void Login::initializeSocket(QSslSocket *sslSocket)
+{
+    sslSocket_=sslSocket;
+}
+
 void Login::on_pushButton_login_clicked()
 {
-    RoomDialog di;
-    QString username,password;
-    username = ui->lineEdit_username->text();
-    password = ui->lineEdit_password->text();
+
+    QSettings settings;
 
 
-   if(!myDb.isOpen()){
-       QString error= myDb.lastError().text();
-       ui->statusLabel->setText(error);
-       qDebug()<<myDb.lastError();
-       //ui->statusLabel->setText("Failed to open the Database");
-       return;
-    }
+    QString username = ui->lineEdit_username->text();
 
-    QSqlQuery qry;
-    int count=0;
+    if(username.isEmpty())
+        return;
 
-    if(qry.exec("select * from user_table where username='"+username+"' and password='"+password+"'")){
-        while(qry.next()){
-            count++;
-        }
+    settings.setValue("username",username);
 
-        if(count == 1){
-            ui->statusLabel->setText("username and password is correct");
-            di.exec();
-        }
-        if(count > 1)
-            ui->statusLabel->setText("Duplicate username and password");
-        if(count < 1)
-            ui->statusLabel->setText("username and password is not correct");
-    }
+    QString password = ui->lineEdit_password->text();
+
+    Message message;
+    message.set_username(username.toUtf8().constData(),
+                         username.toUtf8().length());
+    message.set_timestamp(0);
+    message.set_type(Message::LOGIN);
+    message.set_data(password.toUtf8().constData(),
+                     password.toUtf8().length());
+
+    std::string buffer;
+    message.SerializeToString(&buffer);
+
+    sslSocket_->write(buffer.c_str(), buffer.size());
+
+    this->accept(); //Hides the modal dialog
+
+    MainWindow mw;
+    mw.initializeSocket(sslSocket_);
+    mw.exec();
+
+    this->show();   //When login window is close settings appears
 }

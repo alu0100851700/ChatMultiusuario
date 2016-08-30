@@ -2,6 +2,8 @@
 #define SETTINGSDIALOG_H
 
 #include <QDialog>
+#include <QSslSocket>
+#include "login.h"
 
 namespace Ui {
 class SettingsDialog;
@@ -14,12 +16,19 @@ class SettingsDialog : public QDialog
 public:
     explicit SettingsDialog(QWidget *parent = 0);
     ~SettingsDialog();
-public slots:
-    void done(int r);
+private slots:
+   void on_ConnectButton_clicked();
+   void socketError(QAbstractSocket::SocketError);
+   void sslErrors(const QList<QSslError> &errors);
 
+public slots:
+   void socketConneted();
 
 private:
     Ui::SettingsDialog *ui;
+    QSslSocket *sslSocket_;
+    bool isConnected_;
+
 };
 
 #endif // SETTINGSDIALOG_H

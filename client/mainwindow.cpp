@@ -14,8 +14,6 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
-    isConnected_(false),
-    sslSocket_(new QSslSocket(this)),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -44,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->Avatar->setIconSize(QSize(100,100));
 
     /*//////////////////////////////*/
-    if (sslSocket_->supportsSsl())
+   /* if (sslSocket_->supportsSsl())
       {
         ui->connectButton->setEnabled(true);
         sslSocket_->setProtocol(QSsl::TlsV1_0);
@@ -59,8 +57,8 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->connectButton->setEnabled(false);
     }
 
-    connect(sslSocket_,SIGNAL(disconnected()),this,SLOT(handleDisconnect()));
-    connect(sslSocket_,SIGNAL (readyRead()),this, SLOT(leer_socketservidor()));
+    connect(sslSocket_,SIGNAL(disconnected()),this,SLOT(handleDisconnect()));*/
+
 }
 
 MainWindow::~MainWindow()
@@ -73,7 +71,7 @@ void MainWindow::on_exitButton_clicked()
     qApp->quit();
 }
 
-void MainWindow::on_connectButton_clicked()
+/*void MainWindow::on_connectButton_clicked()
 {
     if(isConnected_){
 
@@ -102,7 +100,7 @@ void MainWindow::on_connectButton_clicked()
         ui->connectButton->setText("Disconnect");
         isConnected_=true;
     }
-}
+}*/
 
 void MainWindow::on_aboutButton_clicked()
 {
@@ -114,7 +112,6 @@ void MainWindow::on_inputTextEdit_returnPressed()
 {
     QString line= ui->inputTextEdit->text();
     ui->outputTextEdit->appendPlainText(line);
-    line += '\n';
 
     ui->inputTextEdit->clear();
 
@@ -145,12 +142,12 @@ void MainWindow::on_setupButton_clicked()
     dialog.exec();
 }
 
-void MainWindow::handleDisconnect()
+/*void MainWindow::handleDisconnect()
 {
     ui->connectButton->setText("Connect");
     isConnected_=false;
 }
-
+*/
 void MainWindow ::leer_socketservidor()
 {
     Message message;
@@ -217,4 +214,15 @@ void MainWindow::on_pushButton_2_clicked()
     RoomDialog di;
     di.initializeSocket(sslSocket_);
     di.exec();
+    ui->outputTextEdit->clear();
+
+    /*
+    Login lo;
+    lo.exec();
+    */
+}
+
+void MainWindow::initializeSocket(QSslSocket* sslSocket){
+    sslSocket_=sslSocket;
+    connect(sslSocket_,SIGNAL(readyRead()),this, SLOT(leer_socketservidor()));
 }

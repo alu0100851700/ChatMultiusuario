@@ -22,11 +22,12 @@ class MainWindow : public QDialog
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void initializeSocket(QSslSocket *sslSocket);
 
 private slots:
     void on_exitButton_clicked();
 
-    void on_connectButton_clicked();
+   // void on_connectButton_clicked();
 
     void on_aboutButton_clicked();
 
@@ -34,7 +35,7 @@ private slots:
 
     void on_setupButton_clicked();
 
-    void handleDisconnect();
+    //void handleDisconnect();
 
     void socketError(QAbstractSocket::SocketError);
 
@@ -51,7 +52,6 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    bool isConnected_;
     QSslSocket* sslSocket_;
     QMenu *mAvatarMenu;
     QAction *mWebcamAction;

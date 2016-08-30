@@ -17,7 +17,6 @@ RoomDialog::~RoomDialog()
 
 void RoomDialog::on_buttonBox_accepted()
 {
-
     QString line=ui->roomLineEdit->text() ;
     QSettings settings;
 

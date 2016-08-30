@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QSslSocket>
 #include <QSettings>
+#include <mainwindow.h>
 
 #include "talkmessage.pb.h"
 

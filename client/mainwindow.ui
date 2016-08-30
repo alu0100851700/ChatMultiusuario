@@ -10,6 +10,9 @@
     <height>259</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::NoFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>Talk GUI</string>
   </property>
@@ -31,23 +34,10 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QPushButton" name="connectButton">
-       <property name="minimumSize">
-        <size>
-         <width>80</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Connect</string>
-       </property>
-       <property name="autoDefault">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="setupButton">
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="text">
         <string>Configure...</string>
        </property>
@@ -58,6 +48,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="exitButton">
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="text">
         <string>Exit</string>
        </property>
@@ -68,6 +61,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="aboutButton">
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="text">
         <string>About</string>
        </property>
@@ -78,8 +74,14 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_2">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="text">
-        <string>SaltarLogin</string>
+        <string>Room</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -98,8 +100,14 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButton">
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="text">
-        <string>ExitRoom</string>
+        <string>Exit Room</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -122,6 +130,9 @@
          <width>16</width>
          <height>16</height>
         </size>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
        </property>
        <property name="flat">
         <bool>true</bool>

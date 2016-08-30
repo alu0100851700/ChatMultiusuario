@@ -2,7 +2,8 @@
 #define LOGIN_H
 
 #include <QDialog>
-#include <QSqlDatabase>
+#include <QSslSocket>
+#include "talkmessage.pb.h"
 
 namespace Ui {
 class Login;
@@ -15,13 +16,14 @@ class Login : public QDialog
 public:
     explicit Login(QWidget *parent = 0);
     ~Login();
+    void initializeSocket(QSslSocket *sslSocket);
 
 private slots:
     void on_pushButton_login_clicked();
 
 private:
     Ui::Login *ui;
-    QSqlDatabase myDb;
+    QSslSocket *sslSocket_;
 };
 
 #endif // LOGIN_H

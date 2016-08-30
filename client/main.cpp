@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "login.h"
+#include "settingsdialog.h"
 #include <QApplication>
 #include <QTcpSocket>
 
@@ -14,12 +15,14 @@ int main(int argc, char *argv[])
     QApplication::setOrganizationDomain("ull.es");
     QApplication::setApplicationName("Talk GUI");
 
-
-    /*Login w;
+    /*MainWindow w;
     w.show();*/
 
-    MainWindow w;
-    w.show();
+   /* Login z;
+    z.show();*/
+
+    SettingsDialog se;
+    se.show();
 
     return a.exec();
 }
