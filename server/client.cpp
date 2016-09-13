@@ -29,11 +29,6 @@ Client::Client(QSslSocket *sslSocket, QObject *parent)
 
 
     }
-
-    // PRUEBA SALA POR DEFECTO
-
-    joinRoom("default");
-
 }
 
 int Client::get_trasferedData()
@@ -122,12 +117,12 @@ void Client::readData()
         if(password == dbpassword){
             logged = true;
             qDebug() << username.toUpper() + " logged in";
-            joinRoom("premium");
-            text = "Your login was successful";
+            joinRoom("default");
+            text = "1";
         }
         else{
             qDebug() << username.toUpper() + " failed while logging";
-            text = "Wrong password";
+            text = "0";
         }
 
 

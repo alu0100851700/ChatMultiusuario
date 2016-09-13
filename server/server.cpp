@@ -1,6 +1,7 @@
 #include "server.h"
 
 #define INTERVALTIMER 10    //in sec
+
 Server::Server(QObject *parent)
     : QTcpServer(parent)
 {
@@ -38,10 +39,13 @@ Server::Server(QObject *parent)
     /*******************************************************************/
 
     // Stadistics file
-    QDir serverDirectory(QDir::homePath() + "/.talkServer/log");
-
+    QDir serverDirectory(QDir::homePath() + "/.talkServer");
     if(!serverDirectory.exists())
-            QDir().mkdir(QDir::homePath() + "/.talkServer/log");
+            serverDirectory.mkdir(QDir::homePath() + "/.talkServer");
+
+    QDir logDirectory(QDir::homePath() + "/.talkServer/log");
+    if(!logDirectory.exists())
+            logDirectory.mkdir(QDir::homePath() + "/.talkServer/log");
 
     stadistics_ = new QFile(QDir::homePath() + "/.talkServer/log/stadistic.log");
 
