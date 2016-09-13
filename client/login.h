@@ -17,6 +17,7 @@ public:
     explicit Login(QWidget *parent = 0);
     ~Login();
     void initializeSocket(QSslSocket *sslSocket);
+    void ver_estadoLogin();
 
 private slots:
     void on_pushButton_login_clicked();
@@ -24,6 +25,7 @@ private slots:
 private:
     Ui::Login *ui;
     QSslSocket *sslSocket_;
+    bool estadoLogin;
 };
 
 #endif // LOGIN_H

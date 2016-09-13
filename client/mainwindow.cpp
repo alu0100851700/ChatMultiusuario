@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QPixmap>
 #include <login.h>
+#include <QMessageBox>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -41,24 +42,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->Avatar->setIcon(ButtonIcon);
     ui->Avatar->setIconSize(QSize(100,100));
 
-    /*//////////////////////////////*/
-   /* if (sslSocket_->supportsSsl())
-      {
-        ui->connectButton->setEnabled(true);
-        sslSocket_->setProtocol(QSsl::TlsV1_0);
-      }
-    else{
-        QString noSslMsg = QString("%1\n%2")
-                .arg("*** Your version of Qt does support SSL ***")
-                .arg("If you believe that your "
-                     "version of Qt has SSL support enabled, you may "
-                     "need to install the OpenSSL run-time libraries.");
-        ui->outputTextEdit->appendPlainText(noSslMsg);
-        ui->connectButton->setEnabled(false);
-    }
-
-    connect(sslSocket_,SIGNAL(disconnected()),this,SLOT(handleDisconnect()));*/
-
 }
 
 MainWindow::~MainWindow()
@@ -70,37 +53,6 @@ void MainWindow::on_exitButton_clicked()
 {
     qApp->quit();
 }
-
-/*void MainWindow::on_connectButton_clicked()
-{
-    if(isConnected_){
-
-        sslSocket_->disconnectFromHost();
-        ui->connectButton->setText("Connect");
-        isConnected_=false;
-
-    }
-    else{
-        QSettings settings;
-        QString serverAddress = settings.value("serverAddress",
-                                               "127.0.0.1").toString();
-        int port = settings.value("port",6000).toInt();
-        QString username = settings.value("username").toString();
-
-        connect(sslSocket_, SIGNAL(error(QAbstractSocket::SocketError)),
-                        this, SLOT(socketError(QAbstractSocket::SocketError)));
-        connect(sslSocket_, SIGNAL(sslErrors(QList<QSslError>)),
-                this, SLOT(sslErrors(QList<QSslError>)));
-
-        QList<QSslError> errorsThatCanBeIgnored;
-        //errorsThatCanBeIgnored
-
-        sslSocket_->connectToHostEncrypted(serverAddress,port);
-
-        ui->connectButton->setText("Disconnect");
-        isConnected_=true;
-    }
-}*/
 
 void MainWindow::on_aboutButton_clicked()
 {
@@ -142,12 +94,6 @@ void MainWindow::on_setupButton_clicked()
     dialog.exec();
 }
 
-/*void MainWindow::handleDisconnect()
-{
-    ui->connectButton->setText("Connect");
-    isConnected_=false;
-}
-*/
 void MainWindow ::leer_socketservidor()
 {
     Message message;
@@ -163,7 +109,15 @@ void MainWindow ::leer_socketservidor()
 
     if( message.type() == Message::TEXT ){  //Mensaje de texto
         std::string text = message.data();
-        ui->outputTextEdit->appendPlainText(QString::fromUtf8(text.c_str()));
+        std::string all=username+":"+text;
+        ui->outputTextEdit->appendPlainText(QString::fromUtf8(all.c_str()));
+        /*ui->outputTextEdit->appendPlainText(QString::fromUtf8(username.c_str()));
+        ui->outputTextEdit->appendPlainText(QString::number(timestamp));*/
+
+        if((username == "Server") && text == "0"){
+
+        }
+
     }
 }
 
@@ -209,8 +163,15 @@ void MainWindow::sslErrors(const QList<QSslError> &errors)
 }
 
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::initializeSocket(QSslSocket* sslSocket)
 {
+    sslSocket_=sslSocket;
+    connect(sslSocket_,SIGNAL(readyRead()),this, SLOT(leer_socketservidor()));
+}
+
+void MainWindow::on_roomButton_clicked()
+{
+
     RoomDialog di;
     di.initializeSocket(sslSocket_);
     di.exec();
@@ -222,7 +183,25 @@ void MainWindow::on_pushButton_2_clicked()
     */
 }
 
-void MainWindow::initializeSocket(QSslSocket* sslSocket){
-    sslSocket_=sslSocket;
-    connect(sslSocket_,SIGNAL(readyRead()),this, SLOT(leer_socketservidor()));
+void MainWindow::on_exitRoomButton_clicked()
+{
+    QString roomname="default";
+    QSettings settings;
+
+    QString username = settings.value("username").toString();
+
+    Message message;
+    message.set_username(username.toUtf8().constData(),
+                         username.toUtf8().length());
+    QDateTime timestamp;
+    message.set_timestamp(timestamp.toTime_t());
+    message.set_type(Message::JOINROOM);
+    message.set_data(roomname.toUtf8().constData(),
+                     roomname.toUtf8().length());
+
+    std::string buffer;
+    message.SerializeToString(&buffer);
+
+    sslSocket_->write(buffer.c_str(),buffer.size());
+
 }

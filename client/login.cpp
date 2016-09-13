@@ -5,6 +5,7 @@
 #include <QSqlError>
 Login::Login(QWidget *parent) :
     QDialog(parent),
+    estadoLogin(1),
     ui(new Ui::Login)
 {
     ui->setupUi(this);
@@ -30,6 +31,7 @@ Login::~Login()
 void Login::initializeSocket(QSslSocket *sslSocket)
 {
     sslSocket_=sslSocket;
+    connect(sslSocket_,SIGNAL(readyRead()),this, SLOT(ver_estadoLogin()));
 }
 
 void Login::on_pushButton_login_clicked()
@@ -50,7 +52,8 @@ void Login::on_pushButton_login_clicked()
     Message message;
     message.set_username(username.toUtf8().constData(),
                          username.toUtf8().length());
-    message.set_timestamp(0);
+    QDateTime timestamp;
+    message.set_timestamp(timestamp.toTime_t());
     message.set_type(Message::LOGIN);
     message.set_data(password.toUtf8().constData(),
                      password.toUtf8().length());
@@ -60,11 +63,36 @@ void Login::on_pushButton_login_clicked()
 
     sslSocket_->write(buffer.c_str(), buffer.size());
 
-    this->accept(); //Hides the modal dialog
+    if(estadoLogin){
+        this->accept(); //Hides the modal dialog
 
-    MainWindow mw;
-    mw.initializeSocket(sslSocket_);
-    mw.exec();
+        MainWindow mw;
+        mw.initializeSocket(sslSocket_);
+        mw.exec();
 
-    this->show();   //When login window is close settings appears
+        this->show();   //When login window is close settings appears
+    }
+}
+
+void Login::ver_estadoLogin()
+{
+    Message message;
+    QByteArray data;
+
+
+    data += sslSocket_->readLine();
+
+    message.ParseFromArray(data,data.length());
+
+    std::string username = message.username();
+
+    if( message.type() == Message::TEXT ){  //Mensaje de texto
+        std::string text = message.data();
+
+        if((username == "Server") && text == "0"){
+            estadoLogin=0;
+            QString fallo="Login Fail";
+            ui->messageText->appendPlainText(fallo);
+        }
+    }
 }

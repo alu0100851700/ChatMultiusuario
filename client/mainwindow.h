@@ -8,6 +8,8 @@
 #include <QCamera>
 #include <QMenu>
 #include <QAction>
+#include <QDateTime>
+
 
 #include "talkmessage.pb.h"
 
@@ -27,22 +29,19 @@ public:
 private slots:
     void on_exitButton_clicked();
 
-   // void on_connectButton_clicked();
-
     void on_aboutButton_clicked();
 
     void on_inputTextEdit_returnPressed();
 
     void on_setupButton_clicked();
 
-    //void handleDisconnect();
-
     void socketError(QAbstractSocket::SocketError);
 
     void sslErrors(const QList<QSslError> &errors);
 
+    void on_roomButton_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_exitRoomButton_clicked();
 
 public slots:
     void leer_socketservidor();

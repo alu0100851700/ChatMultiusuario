@@ -39,8 +39,9 @@ Server::Server(QObject *parent)
 
     // Stadistics file
     QDir serverDirectory(QDir::homePath() + "/.talkServer/log");
+
     if(!serverDirectory.exists())
-            serverDirectory.mkdir(QDir::homePath() + "/.talkServer/log");
+            QDir().mkdir(QDir::homePath() + "/.talkServer/log");
 
     stadistics_ = new QFile(QDir::homePath() + "/.talkServer/log/stadistic.log");
 
