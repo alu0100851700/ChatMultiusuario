@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QSslSocket>
+#include <unistd.h>
 #include "talkmessage.pb.h"
 
 namespace Ui {
@@ -17,15 +18,15 @@ public:
     explicit Login(QWidget *parent = 0);
     ~Login();
     void initializeSocket(QSslSocket *sslSocket);
-    void ver_estadoLogin();
+
 
 private slots:
     void on_pushButton_login_clicked();
+    void ver_estadoLogin();
 
 private:
     Ui::Login *ui;
     QSslSocket *sslSocket_;
-    bool estadoLogin;
 };
 
 #endif // LOGIN_H

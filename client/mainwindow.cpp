@@ -94,7 +94,7 @@ void MainWindow::on_setupButton_clicked()
     dialog.exec();
 }
 
-void MainWindow ::leer_socketservidor()
+void MainWindow::leer_socketservidor()
 {
     Message message;
     QByteArray data;
@@ -109,15 +109,8 @@ void MainWindow ::leer_socketservidor()
 
     if( message.type() == Message::TEXT ){  //Mensaje de texto
         std::string text = message.data();
-        std::string all=username+":"+text;
-        ui->outputTextEdit->appendPlainText(QString::fromUtf8(all.c_str()));
-        /*ui->outputTextEdit->appendPlainText(QString::fromUtf8(username.c_str()));
-        ui->outputTextEdit->appendPlainText(QString::number(timestamp));*/
-
-        if((username == "Server") && text == "0"){
-
-        }
-
+        //std::string all=username+":"+text;
+        ui->outputTextEdit->appendPlainText(QString::fromUtf8(text.c_str()));
     }
 }
 
@@ -171,21 +164,16 @@ void MainWindow::initializeSocket(QSslSocket* sslSocket)
 
 void MainWindow::on_roomButton_clicked()
 {
-
+    ui->outputTextEdit->clear();
     RoomDialog di;
     di.initializeSocket(sslSocket_);
     di.exec();
-    ui->outputTextEdit->clear();
 
-    /*
-    Login lo;
-    lo.exec();
-    */
 }
 
 void MainWindow::on_exitRoomButton_clicked()
 {
-    QString roomname="default";
+    QString roomname="";
     QSettings settings;
 
     QString username = settings.value("username").toString();

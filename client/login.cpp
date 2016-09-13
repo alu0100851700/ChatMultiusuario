@@ -5,7 +5,6 @@
 #include <QSqlError>
 Login::Login(QWidget *parent) :
     QDialog(parent),
-    estadoLogin(1),
     ui(new Ui::Login)
 {
     ui->setupUi(this);
@@ -62,16 +61,6 @@ void Login::on_pushButton_login_clicked()
     message.SerializeToString(&buffer);
 
     sslSocket_->write(buffer.c_str(), buffer.size());
-
-    if(estadoLogin){
-        this->accept(); //Hides the modal dialog
-
-        MainWindow mw;
-        mw.initializeSocket(sslSocket_);
-        mw.exec();
-
-        this->show();   //When login window is close settings appears
-    }
 }
 
 void Login::ver_estadoLogin()
@@ -80,19 +69,31 @@ void Login::ver_estadoLogin()
     QByteArray data;
 
 
-    data += sslSocket_->readLine();
+    while ( sslSocket_->bytesAvailable() > 0 )
+        data += sslSocket_->readAll();
 
     message.ParseFromArray(data,data.length());
 
     std::string username = message.username();
 
+
     if( message.type() == Message::TEXT ){  //Mensaje de texto
         std::string text = message.data();
 
-        if((username == "Server") && text == "0"){
-            estadoLogin=0;
-            QString fallo="Login Fail";
-            ui->messageText->appendPlainText(fallo);
+        if((username == "Server") && text == "1"){
+            this->accept(); //Hides the modal dialog
+
+            MainWindow mw;
+            disconnect(sslSocket_,SIGNAL(readyRead()),this,
+                       SLOT(ver_estadoLogin()));
+            mw.initializeSocket(sslSocket_);
+            mw.exec();
+
+            this->show();   //When login window is close settings appears
+        }
+        else{
+            QString fallo="Fail Login";
+            ui->statusLabel->setText(fallo);
         }
     }
 }
