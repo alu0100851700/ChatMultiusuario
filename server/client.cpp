@@ -118,11 +118,11 @@ void Client::readData()
             logged = true;
             qDebug() << username.toUpper() + " logged in";
             joinRoom("default");
-            text = "Your login was successful";
+            text = "1";
         }
         else{
             qDebug() << username.toUpper() + " failed while logging";
-            text = "Wrong password";
+            text = "0";
         }
 
 
