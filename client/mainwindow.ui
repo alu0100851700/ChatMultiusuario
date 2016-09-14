@@ -34,12 +34,12 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QPushButton" name="setupButton">
+      <widget class="QPushButton" name="roomButton">
        <property name="focusPolicy">
-        <enum>Qt::ClickFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
-        <string>Configure...</string>
+        <string>Room</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -47,12 +47,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="exitButton">
+      <widget class="QPushButton" name="setupButton">
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
        <property name="text">
-        <string>Exit</string>
+        <string>Configure...</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -73,12 +73,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="roomButton">
+      <widget class="QPushButton" name="exitButton">
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="text">
-        <string>Room</string>
+        <string>Exit</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -97,19 +97,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="exitRoomButton">
-       <property name="focusPolicy">
-        <enum>Qt::ClickFocus</enum>
-       </property>
-       <property name="text">
-        <string>Exit Room</string>
-       </property>
-       <property name="autoDefault">
-        <bool>false</bool>
-       </property>
-      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="Avatar">

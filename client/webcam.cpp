@@ -24,16 +24,13 @@ Webcam::Webcam(QWidget *parent) :
     mCamera->setViewfinder(mCameraViewfinder);
     mLayout->setMargin(0);
     mCamera->start();
-
-
-    }
+}
 
 
 Webcam::~Webcam()
 {
     delete ui;
 }
-
 
 void Webcam::on_CapturePushButton_clicked()
 {

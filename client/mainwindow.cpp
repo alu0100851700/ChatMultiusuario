@@ -185,27 +185,3 @@ void MainWindow::on_roomButton_clicked()
     di.exec();
 
 }
-
-void MainWindow::on_exitRoomButton_clicked()
-{
-    QString roomname="Exit";
-    QSettings settings;
-
-    QString username = settings.value("username").toString();
-
-    Message message;
-    message.set_username(username.toUtf8().constData(),
-                         username.toUtf8().length());
-
-    message.set_timestamp(QDateTime::currentDateTime().toMSecsSinceEpoch());
-
-    message.set_type(Message::JOINROOM);
-    message.set_data(roomname.toUtf8().constData(),
-                     roomname.toUtf8().length());
-
-    std::string buffer;
-    message.SerializeToString(&buffer);
-
-    sslSocket_->write(buffer.c_str(),buffer.size());
-
-}

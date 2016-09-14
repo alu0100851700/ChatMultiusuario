@@ -42,8 +42,6 @@ private slots:
 
     void on_roomButton_clicked();
 
-    void on_exitRoomButton_clicked();
-
 public slots:
     void leer_socketservidor();
     void webcamOptions();

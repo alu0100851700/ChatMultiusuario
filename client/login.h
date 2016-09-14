@@ -21,7 +21,8 @@ public:
     void failedWhileLogin();
 
 private slots:
-    void on_pushButton_login_clicked();
+
+    void on_pushButtonLogin_clicked();
 
 private:
     Ui::Login *ui;

@@ -32,9 +32,13 @@ void Login::initializeSocket(QSslSocket *sslSocket)
     sslSocket_=sslSocket;
 }
 
-void Login::on_pushButton_login_clicked()
+void Login::failedWhileLogin()
 {
+    ui->statusLabel->setText("Fail Login");
+}
 
+void Login::on_pushButtonLogin_clicked()
+{
     QSettings settings;
 
 
@@ -60,10 +64,4 @@ void Login::on_pushButton_login_clicked()
     message.SerializeToString(&buffer);
 
     sslSocket_->write(buffer.c_str(), buffer.size());
-}
-
-
-void Login::failedWhileLogin()
-{
-    ui->statusLabel->setText("Fail Login");
 }
