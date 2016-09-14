@@ -9,6 +9,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QDateTime>
+#include <login.h>
 
 
 #include "talkmessage.pb.h"
@@ -55,6 +56,7 @@ private:
     QMenu *mAvatarMenu;
     QAction *mWebcamAction;
     QAction *mCargarAction;
+    Login lg;
 };
 
 #endif // MAINWINDOW_H

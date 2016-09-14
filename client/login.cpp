@@ -30,7 +30,6 @@ Login::~Login()
 void Login::initializeSocket(QSslSocket *sslSocket)
 {
     sslSocket_=sslSocket;
-    connect(sslSocket_,SIGNAL(readyRead()),this, SLOT(ver_estadoLogin()));
 }
 
 void Login::on_pushButton_login_clicked()
@@ -63,37 +62,8 @@ void Login::on_pushButton_login_clicked()
     sslSocket_->write(buffer.c_str(), buffer.size());
 }
 
-void Login::ver_estadoLogin()
+
+void Login::failedWhileLogin()
 {
-    Message message;
-    QByteArray data;
-
-
-    while ( sslSocket_->bytesAvailable() > 0 )
-        data += sslSocket_->readAll();
-
-    message.ParseFromArray(data,data.length());
-
-    std::string username = message.username();
-
-
-    if( message.type() == Message::TEXT ){  //Mensaje de texto
-        std::string text = message.data();
-
-        if((username == "Server") && text == "1"){
-            this->accept(); //Hides the modal dialog
-
-            MainWindow mw;
-            disconnect(sslSocket_,SIGNAL(readyRead()),this,
-                       SLOT(ver_estadoLogin()));
-            mw.initializeSocket(sslSocket_);
-            mw.exec();
-
-            this->show();   //When login window is close settings appears
-        }
-        else{
-            QString fallo="Fail Login";
-            ui->statusLabel->setText(fallo);
-        }
-    }
+    ui->statusLabel->setText("Fail Login");
 }

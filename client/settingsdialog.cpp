@@ -55,13 +55,6 @@ void SettingsDialog::on_ConnectButton_clicked()
         QSettings settings;
         settings.setValue("serverAddress",ui->serverAddress->text());
         settings.setValue("port",ui->portBox->value());
-        /*
-        if(ui->userNameEdit->text().isEmpty())
-            settings.remove("username");
-        else
-            settings.setValue("username",ui->userNameEdit->text());
-        */
-
     }
 
 
@@ -88,10 +81,6 @@ void SettingsDialog::on_ConnectButton_clicked()
         //errorsThatCanBeIgnored
 
         sslSocket_->connectToHostEncrypted(serverAddress,port);
-
-
-
-
     }
 }
 
@@ -112,7 +101,7 @@ void SettingsDialog::socketConneted()
 
     this->accept(); //Hides the modal dialog
 
-    Login z;
+    MainWindow z;
     z.initializeSocket(sslSocket_);
     z.exec();
 

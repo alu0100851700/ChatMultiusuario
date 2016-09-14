@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QSslSocket>
-#include "login.h"
+#include "mainwindow.h"
 
 namespace Ui {
 class SettingsDialog;

@@ -63,7 +63,7 @@ void MainWindow::on_aboutButton_clicked()
 void MainWindow::on_inputTextEdit_returnPressed()
 {
     QString line= ui->inputTextEdit->text();
-    ui->outputTextEdit->appendPlainText(line);
+    ui->outputTextEdit->appendPlainText("Tu: "+line);
 
     ui->inputTextEdit->clear();
 
@@ -105,12 +105,23 @@ void MainWindow::leer_socketservidor()
     message.ParseFromArray(data, data.length());
 
     std::string username = message.username();
-    int timestamp = message.timestamp();
-
     if( message.type() == Message::TEXT ){  //Mensaje de texto
         std::string text = message.data();
-        //std::string all=username+":"+text;
-        ui->outputTextEdit->appendPlainText(QString::fromUtf8(text.c_str()));
+        if(username == "Server"){
+            if(text=="1"){
+                lg.accept();
+            }
+
+            else if(text == "0")
+                lg.failedWhileLogin();
+            else
+                ui->outputTextEdit->appendPlainText(QString::fromUtf8(text.c_str()));
+        }
+
+            else{
+                ui->outputTextEdit->appendPlainText(
+                            QString::fromUtf8((username+": "+text).c_str()));
+            }
     }
 }
 
@@ -160,6 +171,10 @@ void MainWindow::initializeSocket(QSslSocket* sslSocket)
 {
     sslSocket_=sslSocket;
     connect(sslSocket_,SIGNAL(readyRead()),this, SLOT(leer_socketservidor()));
+
+    lg.initializeSocket(sslSocket_);
+    lg.exec();
+
 }
 
 void MainWindow::on_roomButton_clicked()
@@ -181,8 +196,9 @@ void MainWindow::on_exitRoomButton_clicked()
     Message message;
     message.set_username(username.toUtf8().constData(),
                          username.toUtf8().length());
-    QDateTime timestamp;
-    message.set_timestamp(timestamp.toTime_t());
+
+    message.set_timestamp(QDateTime::currentDateTime().toMSecsSinceEpoch());
+
     message.set_type(Message::JOINROOM);
     message.set_data(roomname.toUtf8().constData(),
                      roomname.toUtf8().length());

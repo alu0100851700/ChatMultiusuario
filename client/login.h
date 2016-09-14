@@ -18,11 +18,10 @@ public:
     explicit Login(QWidget *parent = 0);
     ~Login();
     void initializeSocket(QSslSocket *sslSocket);
-
+    void failedWhileLogin();
 
 private slots:
     void on_pushButton_login_clicked();
-    void ver_estadoLogin();
 
 private:
     Ui::Login *ui;
