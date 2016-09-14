@@ -13,7 +13,7 @@ Room::Room(QString name):
     if(!historyDirectory.exists())
             historyDirectory.mkdir(QDir::homePath() + "/.talkServer/history");
 
-    history_ = new QFile(QDir::homePath() + "/.talkServer/history" + name_);
+    history_ = new QFile(QDir::homePath() + "/.talkServer/history/" + name_);
 
 }
 
@@ -92,6 +92,7 @@ void Room::sendHistory(Client *client){
               return;
 
     while(!history_->atEnd() ){
+        client->sslSocket_->waitForBytesWritten(100);
         QByteArray line = history_->readLine();
         std::string username =line.toStdString();
 
