@@ -38,11 +38,13 @@ Server::Server(QObject *parent)
     login_db.close();
     /*******************************************************************/
 
-    // Stadistics file
+    // Server directory
     QDir serverDirectory(QDir::homePath() + "/.talkServer");
     if(!serverDirectory.exists())
             serverDirectory.mkdir(QDir::homePath() + "/.talkServer");
 
+
+    // Logs directory
     QDir logDirectory(QDir::homePath() + "/.talkServer/log");
     if(!logDirectory.exists())
             logDirectory.mkdir(QDir::homePath() + "/.talkServer/log");

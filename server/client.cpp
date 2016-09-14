@@ -117,7 +117,6 @@ void Client::readData()
         if(password == dbpassword){
             logged = true;
             qDebug() << username.toUpper() + " logged in";
-            joinRoom("default");
             text = "1";
         }
         else{
@@ -170,6 +169,11 @@ void Client::disconnection()
             .arg(sslSocket_->peerPort());
 
     std::cout << text.toUtf8().constData() << std::endl;
+
+    for(int i=0; i<Client::list.length(); i++)
+        if(Client::list[i] == this)
+            Client::list.removeAt(i);
+    delete this;
 }
 
 void Client::socketError(QAbstractSocket::SocketError)
@@ -193,10 +197,15 @@ void Client::handshakeComplete()
 
 void Client::joinRoom(QString name)
 {
-    if(logged || name == "default"){
+    qDebug() << "Join room: " << name;
+    if(logged && name == ""){         //EXIT ROOM
+        room_->leave(this);
+    }
+    else if(logged){
         if(room_ != NULL){
             room_->leave(this);
         }
+
 
         bool existsRoom = false;
         for(int i=0; i < Room::list.length(); i++){
