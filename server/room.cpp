@@ -92,6 +92,7 @@ void Room::sendHistory(Client *client){
               return;
 
     while(!history_->atEnd() ){
+        client->sslSocket_->waitForBytesWritten(100);
         QByteArray line = history_->readLine();
         std::string username =line.toStdString();
 
