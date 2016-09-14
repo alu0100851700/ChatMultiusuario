@@ -30,7 +30,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
                 .arg("If you believe that your "
                      "version of Qt has SSL support enabled, you may "
                      "need to install the OpenSSL run-time libraries.");
-        //ui->outputTextEdit->appendPlainText(noSslMsg);
+        ui->versionMessage->setText(noSslMsg);
         ui->ConnectButton->setEnabled(false);
     }
 
@@ -78,7 +78,6 @@ void SettingsDialog::on_ConnectButton_clicked()
                 this, SLOT(sslErrors(QList<QSslError>)));
 
         QList<QSslError> errorsThatCanBeIgnored;
-        //errorsThatCanBeIgnored
 
         sslSocket_->connectToHostEncrypted(serverAddress,port);
     }

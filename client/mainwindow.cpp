@@ -188,7 +188,7 @@ void MainWindow::on_roomButton_clicked()
 
 void MainWindow::on_exitRoomButton_clicked()
 {
-    QString roomname="";
+    QString roomname="Exit";
     QSettings settings;
 
     QString username = settings.value("username").toString();

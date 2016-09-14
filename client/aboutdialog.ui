@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>444</width>
     <height>300</height>
    </rect>
   </property>
@@ -35,7 +35,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Talk GUI&lt;/span&gt;&lt;/p&gt;Front-end gráfico para Talk&lt;br/&gt;&lt;p&gt;Copyright 2016 Mª Fernanda San Miguel &amp;lt;mikma.etsii@gmail.com&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Talk GUI&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Front-end gráfico para Talk&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Copyright 2016 &lt;/p&gt;&lt;p&gt;David Fernando Redondo Durand &amp;lt;alu0100851700@ull.edu.es&amp;gt;&lt;/p&gt;&lt;p&gt;Maria Fernanda San Miguel &amp;lt;alu0100753653@ull.edu.es&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
