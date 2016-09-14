@@ -19,6 +19,7 @@ Room::Room(QString name):
 
 
 void Room::join(Client *client){
+
     bool inList=false;
     for(int i=0; i < clients_.size() ; i++ )
         if( clients_[i] == client)
@@ -46,6 +47,8 @@ void Room::join(Client *client){
         client->sslSocket_->write(buffer.c_str(), buffer.size());
         clients_.append(client);
         sendHistory(client);
+
+        qDebug() << "Joinning to room message send";
     }
 }
 
@@ -56,7 +59,7 @@ void Room::leave(Client *client){
 }
 
 void Room::send(Client *client, QByteArray data){
-    std::cout << "Dentro de send" << std::endl;
+    qDebug() << "Dentro de send en" << name_;
 
     for(int i=0; i < clients_.size() ; i++ )
         if( clients_[i] != client ){
