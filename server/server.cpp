@@ -29,7 +29,6 @@ Server::Server(QObject *parent)
     QSqlQuery query(login_db);
 
     // Create login table
-
     query.exec("CREATE TABLE LOGIN_TB(                      "
                "    USERNAME    VARCHAR(20) PRIMARY KEY,    "
                "    PASSWORD    VARCHAR(20));               ");

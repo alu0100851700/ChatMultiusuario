@@ -157,6 +157,7 @@ int main(int argc, char *argv[])
 
     if (!fileExists(settings.value("sslkey").toString()))
         settings.setValue("sslkey", QDir::currentPath() + "/certificate/server.key");
+
     if (!fileExists(settings.value("sslkey").toString())){
         std::cerr << "sslkey "
                   << settings.value("sslkey").toString().toUtf8().constData()

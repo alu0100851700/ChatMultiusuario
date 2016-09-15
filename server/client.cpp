@@ -198,14 +198,10 @@ void Client::handshakeComplete()
 void Client::joinRoom(QString name)
 {
     qDebug() << "Join room: " << name;
-    if(logged && name == ""){         //EXIT ROOM
-        room_->leave(this);
-    }
-    else if(logged){
+    if(logged){
         if(room_ != NULL){
             room_->leave(this);
         }
-
 
         bool existsRoom = false;
         for(int i=0; i < Room::list.length(); i++){
